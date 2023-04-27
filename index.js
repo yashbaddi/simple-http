@@ -1,21 +1,10 @@
-import net from "net";
-import { response } from "./response.js";
-import { request } from "./request.js";
-import { create } from "domain";
+import http from "./http.js";
+console.log(http);
 
-function createServer(callback) {
-  let httpResponse, httpRequest;
+const server = http.createServer((req, res) => {
+  console.log("req data", req);
+  res.write("hey there this is a params");
+  res.end();
+});
 
-  const server = net.createServer((socket) => {
-    httpResponse = response(socket);
-
-    socket.on("data", (data) => {
-      httpRequest = request(data);
-      callback(httpRequest, httpResponse);
-    });
-    socket.setEncoding("utf-8");
-  });
-  return server;
-}
-
-export default { createServer: createServer };
+server.listen(6500);

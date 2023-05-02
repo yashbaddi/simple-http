@@ -6,30 +6,37 @@ export function response(socket) {
   };
   const headers = {
     "Content-Type": "plain/text",
-    "Content-Length": 26,
-    Connection: "keep-alive",
-    "Keep-Alive": "timeout=5",
     Date: new Date(),
   };
-  let length = 0;
-
-  let sentString = `HTTP/${res.version} ${res.status} ${
-    res.ok ? "OK" : ""
-  }\r\n${Object.entries(headers)
-    .map(([key, value]) => `${key}:${value}`)
-    .join("\r\n")}\r\n\r\n`;
+  let responseBody = "";
 
   function write(content) {
     // sentString = sentString + length.toString() + "\r\n";
-    sentString += content;
+    responseBody += content;
   }
+
+  function setHeader(key, value) {
+    headers[key] = value;
+  }
+  function writeHead(status, addHeaders = {}) {
+    res.status = status;
+    Object.assign(headers, addHeaders);
+  }
+
   function end() {
-    console.log(sentString);
-    socket.write(sentString);
+    setHeader("Content-Length", responseBody.length);
+
+    let headerString = `HTTP/${res.version} ${res.status} ${
+      res.ok ? "OK" : ""
+    }\r\n${Object.entries(headers)
+      .map(([key, value]) => `${key}:${value}`)
+      .join("\r\n")}\r\n\r\n`;
+
+    socket.write(headerString + responseBody);
     socket.end();
   }
 
-  return { write: write, end: end };
+  return { write: write, setHeader: setHeader, writeHead: writeHead, end: end };
 }
 
 // Date: new Date(),

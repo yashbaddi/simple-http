@@ -3,12 +3,6 @@ GET Request Sample:
 
 GET / HTTP/1.1
 Content-Type: text/plain
-User-Agent: PostmanRuntime/7.32.2
-Accept: */*
-Postman-Token: 28b60970-5ea8-460d-bd15-a7991c01ad6d
-Host: 127.0.0.1:6500
-Accept-Encoding: gzip, deflate, br
-Connection: keep-alive
 Content-Length: 3
 
 hey

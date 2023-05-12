@@ -1,19 +1,30 @@
 import net from "net";
 import { response } from "./response.js";
 import { request } from "./request.js";
-import { create } from "domain";
 
 function createServer(callback) {
   let httpResponse, httpRequest;
 
-  const server = net.createServer((socket) => {
-    httpResponse = response(socket);
+  const server = net.createServer();
+  server.on("connection", (socket) => {
+    let data = Buffer.from("");
+    socket.on("data", (chunks) => {
+      console.log(chunks);
 
-    socket.on("data", (data) => {
+      data = Buffer.concat([data, chunks]);
+
+      if (data.indexOf("\r\n\r\n") >= 0) {
+        socket.emit("headerRecived", data);
+      }
+      console.log("post Data:", data.toString());
+    });
+
+    socket.once("headerRecived", (data) => {
+      console.log("In Reciver");
       httpRequest = request(data);
+      httpResponse = response(socket);
       callback(httpRequest, httpResponse);
     });
-    socket.setEncoding("utf-8");
   });
   return server;
 }

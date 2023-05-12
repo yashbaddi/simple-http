@@ -1,9 +1,13 @@
+const req = {};
+
 export function request(input) {
   console.log("data inside req:", input);
-  const req = {};
 
-  const [headerString, body] = input.split("\r\n\r\n");
-  req.body = body;
+  //Slice the header
+  console.log("Input Split", typeof input);
+
+  const headerString = input.slice(0, input.indexOf("\r\n\r\n")).toString();
+  req.body = input.slice(input.indexOf("\r\n\r\n"));
 
   const lines = headerString.split("\r\n");
   const [method, path, version] = lines.shift().split(" ");
@@ -13,8 +17,8 @@ export function request(input) {
 
   const headers = {};
   for (const line of lines) {
-    const [key, value] = line.split(": ");
-    headers[key] = value;
+    const [key, value] = line.split(":");
+    headers[key] = value.trim();
   }
   req.headers = headers;
 

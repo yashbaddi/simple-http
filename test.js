@@ -1,4 +1,4 @@
-import http from "./index.js";
+import http from "./Depreciated/index.js";
 console.log(http);
 
 const server = http.createServer((req, res) => {

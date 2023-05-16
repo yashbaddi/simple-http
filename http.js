@@ -1,5 +1,5 @@
 import net from "net";
-import Request from "./Request/Request.js";
+import Request from "./Request/request.js";
 
 class Http {
   constructor() {
@@ -20,7 +20,7 @@ class Http {
           dataArray.push(Buffer.from(data));
           data = data.subarray(index);
           httpRequest = new Request(dataArray);
-          httpResponse = response(socket);
+          httpResponse = new Response(socket);
           callback(httpRequest, httpResponse);
         }
       });

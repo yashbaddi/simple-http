@@ -9,18 +9,17 @@ function createServer(callback) {
   server.on("connection", (socket) => {
     let data = Buffer.from("");
     socket.on("data", (chunks) => {
-      console.log(chunks);
+      console.log(chunks.length);
 
       data = Buffer.concat([data, chunks]);
 
       if (data.indexOf("\r\n\r\n") >= 0) {
         socket.emit("headerRecived", data);
+        console.log("In Reciver");
       }
-      console.log("post Data:", data.toString());
     });
 
     socket.once("headerRecived", (data) => {
-      console.log("In Reciver");
       httpRequest = request(data);
       httpResponse = response(socket);
       callback(httpRequest, httpResponse);

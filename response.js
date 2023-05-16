@@ -5,18 +5,20 @@ export function response(socket) {
     version: 1.1,
     status: 200,
     ok: true,
-    "transfer-encoding": "chunked",
   };
 
   socket.write(`HTTP/${res.version} ${res.status} ${res.ok ? "OK" : ""}\r\n`);
+
   const headers = {
     "Content-Type": "plain/text",
     Date: new Date(),
+    "transfer-coding": "chunked",
   };
 
   const sendChunk = new EventEmitter();
   sendChunk.once("sendHeaders", () => {
     Object.entries(headers).forEach(([key, value]) => {
+      console.log(`${key}:${value}\r\n`);
       socket.write(`${key}:${value}\r\n`);
     });
   });
@@ -36,18 +38,19 @@ export function response(socket) {
   function write(content) {
     sendChunk.emit("sendHeaders");
 
-    if (res["content-length"] !== undefined) {
+    if (headers["content-length"] !== undefined) {
       responseBody += content;
-    } else if (res["transfer-encoding"] === "chunked") {
+    } else if (headers["transfer-encoding"] === "chunked") {
+      console.log(formatChunkedTE(content));
       socket.write(formatChunkedTE(content));
     }
   }
 
   function end(content) {
-    if (res["content-length"] !== undefined) {
+    if (headers["content-length"] !== undefined) {
       if (content) responseBody += content;
-      socket.write(content.slice(res["content-length"]));
-    } else if (res["transfer-encoding"] === "chunked") {
+      socket.write(content.slice(headers["content-length"]));
+    } else {
       if (content) {
         socket.write(formatChunkedTE(content));
       }
@@ -65,10 +68,5 @@ export function response(socket) {
 }
 
 function formatChunkedTE(content) {
-  return content.length.toString() + "\r" + content + "\r\n";
+  return content.length + "\r" + content + "\r\n";
 }
-
-// Date: new Date(),
-// Connection: "keep-alive",
-// "Keep-Alive": "timeout=5",
-// "Transfer-Encoding": "chunked",

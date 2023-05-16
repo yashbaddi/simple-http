@@ -4,6 +4,11 @@ GET Request Sample:
 GET / HTTP/1.1
 Content-Type: text/plain
 Content-Length: 3
+Date: new Date(),
+Connection: "keep-alive",
+Keep-Alive: "timeout=5",
+Transfer-Encoding: "chunked",
+
 
 hey
 

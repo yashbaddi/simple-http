@@ -11,7 +11,8 @@
 # TO BE ADDED
 
 - Compression Needed To be implemented
--
+- sending Errors
+- CORS
 
 # NOT BE IMPLEMENTED
 

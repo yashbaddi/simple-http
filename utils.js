@@ -3,7 +3,7 @@ export function once(func, defaultReturn = undefined) {
   let isExecuted = false;
   return () => {
     if (!isExecuted) {
-      let isExecuted = true;
+      isExecuted = true;
       func();
     } else {
       return defaultReturn;

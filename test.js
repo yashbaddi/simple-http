@@ -1,6 +1,6 @@
-import http from "./Depreciated/index.js";
-console.log(http);
-
+import Http from "./http.js";
+console.log(Http);
+const http = new Http();
 const server = http.createServer((req, res) => {
   console.log("req data", req);
   // res.write("hey there this is");

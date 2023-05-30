@@ -7,4 +7,4 @@ const server = http.createServer((req, res) => {
   console.log(res);
 });
 
-server.listen(6969);
+server.listen(4000);

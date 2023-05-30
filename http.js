@@ -6,14 +6,13 @@ import Response from "./Response/res.js";
 
 export default class Http {
   constructor() {
-    this.server = net.createServer();
     console.log(this.server);
   }
 
   createServer(callback) {
+    this.server = net.createServer();
     this.server.on("connection", (socket) => {
       let data = Buffer.from("");
-      const bodyChunks = [];
       let isHeadersParsed = false;
       const httpRequest = new Request();
       let httpResponse;
@@ -28,7 +27,7 @@ export default class Http {
           //parse Headers
           const headerBuffer = data.subarray(0, index);
           data = data.subarray(index);
-          parseHeaders(httpRequest, headerBuffer);
+          httpRequest.parseHeader(headerBuffer);
           isHeadersParsed = true;
           httpResponse = new Response(socket);
           callback(httpRequest, httpResponse);
@@ -53,7 +52,8 @@ export default class Http {
         ) {
           const dataBuffer = data.subarray(0, index);
           data = data.subarray(index);
-          parseTransferEncodeChunked(httpRequest, dataBuffer);
+          // parseTransferEncodeChunked(httpRequest, dataBuffer);
+          httpRequest.parseTransferEncodedChunks(dataBuffer);
         }
       });
       socket.on("end", () => {
@@ -69,7 +69,7 @@ export default class Http {
     return this.server;
   }
   listen(port = 80, callback = () => {}) {
-    server.listen(port);
+    this.server.listen(port);
     callback();
   }
 }

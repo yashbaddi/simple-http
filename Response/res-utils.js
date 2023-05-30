@@ -1,3 +1,4 @@
 export function formatChunkedTE(content) {
-  return content.length + "\r" + content + "\r\n";
+  console.log(content.length.toString(16) + "\r\n" + content + "\r\n");
+  return content.length.toString(16) + "\r\n" + content + "\r\n";
 }

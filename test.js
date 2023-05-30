@@ -8,6 +8,8 @@ const server = http.createServer((req, res) => {
     // console.log(req);
     res.write("hey this is users"); //chunk 1
     res.write("hello"); //chunk 2
+    res.write("hello "); //chunk 3
+
     console.log("Response Value", res);
   }
 

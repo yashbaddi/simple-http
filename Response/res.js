@@ -61,14 +61,16 @@ export default class Response {
   }
 
   end(content) {
+    this.#sendHeaders();
     if (this.headers["content-length"] !== undefined) {
       if (content) responseBody += content;
       this.socket.write(content.slice(this.headers["content-length"]));
     }
     if (this.headers["transfer-encoding"] === "chunked") {
-      if (content) {
+      if (content?.length > 0) {
         this.socket.write(formatChunkedTE(content));
       }
+      this.socket.write("0\r\n\r\n");
     }
     console.log("About to end this conn");
     this.socket.end();
